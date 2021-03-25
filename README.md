@@ -1,4 +1,4 @@
-# Kubernetes Microservices Sample
+# :8ball: Kubernetes Microservices Sample
 
 A tiny repository to demonstrate K8s capabilities using a microservices architectural style along with heterogeneous technology and event-driven architectures.
 
