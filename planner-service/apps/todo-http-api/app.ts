@@ -1,24 +1,30 @@
 import 'module-alias/register';
 
 import express from 'express';
+import mongoose from 'mongoose';
 import { nanoid } from 'nanoid';
 import { UserId } from '@planner/shared/domain';
 import { TodoListCreator } from '@planner/todos/application/create/todo.creator';
 import { TodoId } from '@planner/todos/domain/todo.id';
-import { TodoInMemoryRepository } from '@planner/todos/infrastructure/persistence/todo.inmemory.repository';
+import { TodoMongoRepository } from '@planner/todos/infrastructure/persistence/todo.mongo.repository';
 
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-  const repo = new TodoInMemoryRepository();
-  const creator = new TodoListCreator(repo);
-  creator.invoke(new TodoId(nanoid()), new UserId(nanoid()));
-  res.status(200).json({
-    data: "OK"
-  });
-});
+mongoose.connect('mongodb://localhost/planner', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
 
-app.listen(port, () => {
-  return console.log(`server is listening on ${port}`);
+db.on('open', () => {
+  app.get('/', (req, res) => {
+    const repo = new TodoMongoRepository()
+    const creator = new TodoListCreator(repo);
+    creator.invoke(new TodoId(nanoid()), new UserId(nanoid()));
+    res.status(200).json({
+      data: "OK"
+    });
+  });
+  
+  app.listen(port, () => {
+    return console.log(`server is listening on ${port}`);
+  });
 });

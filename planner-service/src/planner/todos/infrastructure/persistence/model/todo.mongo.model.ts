@@ -1,7 +1,4 @@
-import { Schema } from 'mongoose';
+import { model } from 'mongoose';
+import { todoSchema } from './todo.mongo.schema';
 
-export const TodoMongoSchema = new Schema({
-    _id: {
-        type: String
-    }
-})
+export const TodoMongoModel = model('TodoList', todoSchema);

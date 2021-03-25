@@ -15,7 +15,6 @@ export class TodoListCreator {
 
     invoke(todoId: TodoId, userId: UserId): void {
         const todoList = new Todo(todoId, userId);
-        console.log(todoList.userId);
         this._repository.save(todoList);
         if (this._eventBus) {
             this._eventBus.publish(...todoList.pullEvents());

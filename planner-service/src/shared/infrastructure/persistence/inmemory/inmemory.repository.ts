@@ -1,5 +1,4 @@
 import { Repository } from '../../../domain/persistence/repository';
-import { AggregateRoot } from '../../../domain/aggregate';
 import { NanoIdValueObject } from '../../../domain/valueobject';
 
 export abstract class InMemoryRepository<T> implements Repository<T> {

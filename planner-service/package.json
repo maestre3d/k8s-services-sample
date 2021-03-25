@@ -18,6 +18,7 @@
     "@types/mongoose": "^5.10.4",
     "@types/nanoid": "^2.1.0",
     "@types/node": "^14.14.35",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.22.0",
@@ -29,7 +30,8 @@
     "express": "^4.17.1",
     "module-alias": "^2.2.2",
     "mongoose": "^5.12.2",
-    "nanoid": "^3.1.22"
+    "nanoid": "^3.1.22",
+    "uuid": "^8.3.2"
   },
   "_moduleAliases": {
     "@planner": "dist/src/planner",

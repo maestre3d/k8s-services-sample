@@ -2,6 +2,7 @@ import { AuditableAggregate } from '@sharedKernel/domain/aggregate';
 import { UserId } from '@planner/shared/domain';
 import { Task } from '@planner/tasks/domain/task';
 import { TodoId } from './todo.id';
+import { TodoListCreatedEvent } from './todo.created.event';
 
 export class Todo extends AuditableAggregate {
     private _userId: UserId;
@@ -11,6 +12,10 @@ export class Todo extends AuditableAggregate {
         super(id);
         this._userId = userId;
         this._tasks = tasks || new Array<Task>();
+        this.recordEvent(new TodoListCreatedEvent(
+            id.toString(),
+            userId.toString()
+        ));
     }
 
     addTask(task: Task): void {
