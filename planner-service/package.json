@@ -4,7 +4,10 @@
   "description": "A service where users can manage their everyday tasks",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./apps/todo-http-api/app.ts",
+    "start": "node ./dist/apps/todo-http-api/app.js",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "watch": "nodemon --exec \"npm run build && npm run start\" --watch src --ext ts",
+    "watch_ts": "nodemon ./apps/todo-http-api/app.ts",
     "prod": "tsc && node ./dist/apps/todo-http-api/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +27,12 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "module-alias": "^2.2.2",
     "mongoose": "^5.12.2",
     "nanoid": "^3.1.22"
+  },
+  "_moduleAliases": {
+    "@planner": "dist/src/planner",
+    "@sharedKernel": "dist/src/shared"
   }
 }

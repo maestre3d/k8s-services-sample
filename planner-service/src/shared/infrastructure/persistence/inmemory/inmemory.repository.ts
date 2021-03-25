@@ -2,23 +2,23 @@ import { Repository } from '../../../domain/persistence/repository';
 import { AggregateRoot } from '../../../domain/aggregate';
 import { NanoIdValueObject } from '../../../domain/valueobject';
 
-export class InMemoryRepository implements Repository<AggregateRoot> {
+export abstract class InMemoryRepository<T> implements Repository<T> {
     private _db: Map<string, any>;
 
     constructor() {
         this._db = new Map<string, any>();
     }
 
-    save(item: AggregateRoot): void {
+    save(item: T): void {
         console.log(item);
-        this._db.set(item.id.toString(), item);
+        // this._db.set(item.id.toString(), item);
     }
 
-    find(id: NanoIdValueObject): AggregateRoot {
+    find(id: NanoIdValueObject): T {
         throw new Error('Method not implemented.');
     }
 
-    search(): AggregateRoot[] {
+    search(): T[] {
         throw new Error('Method not implemented.');
     }
 
