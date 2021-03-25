@@ -1,6 +1,6 @@
 import { AuditableAggregate } from '@sharedKernel/domain/aggregate';
 import { UserId } from 'planner/shared/domain';
-import { Task } from 'planner/task/domain/task';
+import { Task } from 'planner/tasks/domain/task';
 import { TodoId } from './todo.id';
 
 export class Todo extends AuditableAggregate {
