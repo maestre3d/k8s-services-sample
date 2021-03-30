@@ -23,4 +23,16 @@ const config: Configuration = {
     }
 }
 
-export default config;
+export class ConfigurationInstance {
+    private static _config: Configuration;
+
+    private constructor() {}
+
+    static getInstance(): Configuration {
+        if (this._config) {
+            return this._config;
+        }
+        this._config = config;
+        return this._config;
+    }
+}

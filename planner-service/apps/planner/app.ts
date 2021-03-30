@@ -8,10 +8,10 @@ import { nanoid } from 'nanoid';
 import { CreateTodoListCommand, CreateTodoListCommandHandler, TodoListCreator } from '@planner/todos/application/create';
 import { TodoMongoRepository } from '@planner/todos/infrastructure/persistence/todo.mongo.repository';
 import { startMongoDb } from '../../src/shared/infrastructure/persistence/mongo/mongo.pool';
-import Configuration from '@sharedKernel/infrastructure/configuration/configuration';
+import { ConfigurationInstance } from '@sharedKernel/infrastructure/configuration/configuration';
 import { WinstonLoggerInstance } from '@sharedKernel/infrastructure/observability/logging/logger.winston';
 
-const config = Configuration;
+const config = ConfigurationInstance.getInstance();
 const logger = WinstonLoggerInstance.getInstance(config);
 
 async function main() {
