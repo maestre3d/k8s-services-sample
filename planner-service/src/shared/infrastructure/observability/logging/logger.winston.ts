@@ -18,7 +18,7 @@ class WinstonLogger implements Logger {
             transports: [
                 new winston.transports.DailyRotateFile({
                     filename: `logs/${configuration.application.service}-%DATE%.error.log`,
-                    datePattern: 'YYYY-DD-MM-HH',
+                    datePattern: 'YYYY-DD-MM',
                     zippedArchive: true,
                     maxSize: '20m',
                     maxFiles: '14d',
@@ -26,7 +26,7 @@ class WinstonLogger implements Logger {
                 }),
                 new winston.transports.DailyRotateFile({
                     filename: `logs/${configuration.application.service}-%DATE%.log`,
-                    datePattern: 'YYYY-DD-MM-HH',
+                    datePattern: 'YYYY-DD-MM',
                     zippedArchive: true,
                     maxSize: '20m',
                     maxFiles: '14d'
