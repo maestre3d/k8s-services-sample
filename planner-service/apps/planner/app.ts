@@ -10,9 +10,16 @@ import { TodoMongoRepository } from '@planner/todos/infrastructure/persistence/t
 import { startMongoDb } from '../../src/shared/infrastructure/persistence/mongo/mongo.pool';
 import { ConfigurationInstance } from '@sharedKernel/infrastructure/configuration/configuration';
 import { WinstonLoggerInstance } from '@sharedKernel/infrastructure/observability/logging/logger.winston';
+import { TodoListFindQueryHandler } from '@planner/todos/application/find/todo.find.query.handler';
+import { TodoListFinder } from '@planner/todos/application/find/todo.find';
+import { TodoListFindQuery } from '@planner/todos/application/find/todo.find.query';
 
 const config = ConfigurationInstance.getInstance();
 const logger = WinstonLoggerInstance.getInstance(config);
+
+const repo = new TodoMongoRepository()
+const creator = new TodoListCreator(repo);
+const finder = new TodoListFinder(repo);
 
 async function main() {
   await startMongoDb(config, logger);
@@ -39,14 +46,28 @@ function startExpressRouter() {
   const port = config.httpServer.port;
 
   app.get('/', (req, res) => {
-    const repo = new TodoMongoRepository()
-    const creator = new TodoListCreator(repo);
     const handler = new CreateTodoListCommandHandler(creator);
     handler.invoke(new CreateTodoListCommand(nanoid(), nanoid()));
 
     res.status(200).json({
       data: "OK"
     });
+  });
+
+  app.get('/todos/:todoId', async (req, res) => {
+    try {
+      const handler = new TodoListFindQueryHandler(finder);
+      const todoList = await handler.invoke(new TodoListFindQuery(req.params.todoId));
+
+      res.status(200).json({
+        data: todoList
+      });
+    } catch (error) {
+      logger.error(error.message)
+      res.status(500).json({
+        err: error,
+      })
+    }
   });
 
   app.listen(port, () => {

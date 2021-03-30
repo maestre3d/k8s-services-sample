@@ -1,3 +1,4 @@
+import { TodoId, UserId } from '@planner/shared/domain';
 import { Todo } from '@planner/todos/domain/todo';
 import { Document } from 'mongoose';
 import { TodoMongo } from '../model/todo.mongo';
@@ -15,4 +16,10 @@ export function marshalTodoMongo(todo: Todo): Document<any, {}> {
         updateTime: todo.updateTime,
         active: todo.active,
     });
+}
+
+export function unmarshalTodoMongo(todoDoc: any): Todo {
+    const todoListId = new TodoId(todoDoc._id);
+    const userId = new UserId(todoDoc.userId);
+    return new Todo(todoListId, userId);
 }

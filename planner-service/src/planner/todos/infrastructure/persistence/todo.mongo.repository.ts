@@ -1,7 +1,7 @@
 import { Repository } from '@sharedKernel/domain/persistence/repository';
 import { Todo } from '@planner/todos/domain/todo';
 import { TodoMongo } from './model/todo.mongo';
-import { marshalTodoMongo } from './marshal/todo.mongo';
+import { marshalTodoMongo, unmarshalTodoMongo } from './marshal/todo.mongo';
 import { TodoId } from '@planner/shared/domain';
 
 export class TodoMongoRepository implements Repository<Todo> {
@@ -12,12 +12,11 @@ export class TodoMongoRepository implements Repository<Todo> {
     }
 
     async find(id: TodoId): Promise<Todo | null> {
-        const res = await TodoMongo.findById("eFGVEojZwkTJnXnuJSgfX").exec();
-        console.log(res);
+        const res = await TodoMongo.findById(id.toString()).exec();
         if (!res) {
             return null;
         }
-        return null;
+        return unmarshalTodoMongo(res);
     }
 
     async search(): Promise<Todo[] | null> {
