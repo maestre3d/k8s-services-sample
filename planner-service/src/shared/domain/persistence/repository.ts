@@ -5,7 +5,7 @@ import { NanoIdValueObject } from '../valueobject';
  */
 export interface Repository<T> {
     save(item: T): void
-    find(id: NanoIdValueObject): T
-    search(): Array<T>
+    find(id: NanoIdValueObject): Promise<T | null>
+    search(): Promise<Array<T> | null>
     remove(id: NanoIdValueObject): void
 }

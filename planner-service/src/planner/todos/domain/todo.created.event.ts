@@ -13,7 +13,7 @@ export class TodoListCreatedEvent extends DomainEvent {
     }
 
     eventName(): string {
-        return 'todo.list.created';
+        return 'todo_list.created';
     }
 
     toPrimtives(): Map<string, any> {

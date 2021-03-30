@@ -16,11 +16,15 @@ export class TodoMongoRepository implements Repository<Todo> {
         todo.save();
     }
 
-    find(id: NanoIdValueObject): Todo {
-        throw new Error('Method not implemented.');
+    async find(id: NanoIdValueObject): Promise<Todo | null> {
+        const res = await TodoMongoModel.findOne({todoId: id.toString()}).exec();
+        if (!res) {
+            return null;
+        }
+        return null;
     }
 
-    search(): Todo[] {
+    async search(): Promise<Todo[] | null> {
         throw new Error('Method not implemented.');
     }
 
