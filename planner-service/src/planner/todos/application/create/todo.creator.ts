@@ -1,7 +1,7 @@
 import { EventBus } from "@sharedKernel/domain/bus/event/event.bus";
 import { UserId } from "@planner/shared/domain";
 import { Todo } from "@planner/todos/domain/todo";
-import { TodoId } from "@planner/todos/domain/todo.id";
+import { TodoId } from "@planner/shared/domain";
 import { TodoRepository } from "../../domain/todo.repository";
 
 export class TodoListCreator {
@@ -15,7 +15,8 @@ export class TodoListCreator {
 
     invoke(todoId: TodoId, userId: UserId): void {
         const todoList = new Todo(todoId, userId);
-        this._repository.save(todoList);
+        // this._repository.save(todoList);
+        this._repository.find(todoList.id);
         if (this._eventBus) {
             this._eventBus.publish(...todoList.pullEvents());
         }

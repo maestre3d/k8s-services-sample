@@ -13,11 +13,11 @@ export abstract class InMemoryRepository<T> implements Repository<T> {
         // this._db.set(item.id.toString(), item);
     }
 
-    find(id: NanoIdValueObject): T {
+    find(id: NanoIdValueObject): Promise<T | null> {
         throw new Error('Method not implemented.');
     }
 
-    search(): T[] {
+    search(): Promise<T[] | null> {
         throw new Error('Method not implemented.');
     }
 

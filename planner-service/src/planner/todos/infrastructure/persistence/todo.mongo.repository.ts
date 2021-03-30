@@ -1,23 +1,19 @@
 import { Repository } from '@sharedKernel/domain/persistence/repository';
 import { Todo } from '@planner/todos/domain/todo';
-import { NanoIdValueObject } from '@sharedKernel/domain/valueobject';
-import { TodoMongoModel } from './model/todo.mongo.model';
+import { TodoMongo } from './model/todo.mongo';
+import { marshalTodoMongo } from './marshal/todo.mongo';
+import { TodoId } from '@planner/shared/domain';
 
 export class TodoMongoRepository implements Repository<Todo> {
 
     save(item: Todo): void {
-        const todo = new TodoMongoModel({
-            todoId: item.id,
-            userId: item.userId,
-            createTime: item.createTime,
-            updateTime: item.updateTime,
-            active: item.active,
-        });
+        const todo = marshalTodoMongo(item);
         todo.save();
     }
 
-    async find(id: NanoIdValueObject): Promise<Todo | null> {
-        const res = await TodoMongoModel.findOne({todoId: id.toString()}).exec();
+    async find(id: TodoId): Promise<Todo | null> {
+        const res = await TodoMongo.findById("eFGVEojZwkTJnXnuJSgfX").exec();
+        console.log(res);
         if (!res) {
             return null;
         }
@@ -28,7 +24,7 @@ export class TodoMongoRepository implements Repository<Todo> {
         throw new Error('Method not implemented.');
     }
 
-    remove(id: NanoIdValueObject): void {
+    remove(id: TodoId): void {
         throw new Error('Method not implemented.');
     }
 }

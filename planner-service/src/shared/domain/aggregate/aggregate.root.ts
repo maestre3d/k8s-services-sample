@@ -7,7 +7,7 @@ import { NanoIdValueObject } from "../valueobject";
  * Thus, an aggregate root is able to perform tasks as ACID transactions within a module from context's boundaries.
  */
 export abstract class AggregateRoot {
-    _id: NanoIdValueObject;
+    protected _id: NanoIdValueObject;
 
     // event in-memory queue
     private _domainEvents: Array<DomainEvent> = new Array<DomainEvent>();
@@ -33,5 +33,9 @@ export abstract class AggregateRoot {
         events.forEach(e => {
             this._domainEvents.push(e);
         });
+    }
+
+    get id(): NanoIdValueObject {
+        return this._id;
     }
 }
