@@ -2,7 +2,7 @@ import 'module-alias/register';
 
 import os from 'os';
 import cluster from 'cluster';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { nanoid } from 'nanoid';
 
 import { CreateTodoListCommand, CreateTodoListCommandHandler, TodoListCreator } from '@planner/todos/application/create';
@@ -13,6 +13,8 @@ import { WinstonLoggerInstance } from '@sharedKernel/infrastructure/observabilit
 import { TodoListFindQueryHandler } from '@planner/todos/application/find/todo.find.query.handler';
 import { TodoListFinder } from '@planner/todos/application/find/todo.find';
 import { TodoListFindQuery } from '@planner/todos/application/find/todo.find.query';
+import { DomainError } from '@sharedKernel/domain/error';
+import { DomainErrors } from '@sharedKernel/domain/error/domain.errors.enum';
 
 const config = ConfigurationInstance.getInstance();
 const logger = WinstonLoggerInstance.getInstance(config);
@@ -41,6 +43,32 @@ function bootstrapHttpServer() {
   startExpressRouter();
 }
 
+function errMiddleware(err: DomainError, req: Request, res: Response, next: NextFunction) {
+  logger.error(err.message, { stack: err.stack, name: err.name })
+  let code = 500;
+  switch (err.name) {
+    case DomainErrors.NotFound:
+      code = 404;
+      break;
+    case DomainErrors.AlreadyExists:
+      code = 409;
+      break;
+    case DomainErrors.OutOfRange:
+      code = 400;
+      break;
+    case DomainErrors.InvalidFormat:
+      code = 400;
+      break;
+    case DomainErrors.Custom:
+      code = 400;
+      break;
+  }
+  
+  res.status(code).json({
+    error: err,
+  })
+}
+
 function startExpressRouter() {
   const app = express();
   const port = config.httpServer.port;
@@ -54,7 +82,7 @@ function startExpressRouter() {
     });
   });
 
-  app.get('/todos/:todoId', async (req, res) => {
+  app.get('/todos/:todoId', async (req, res, next) => {
     try {
       const handler = new TodoListFindQueryHandler(finder);
       const todoList = await handler.invoke(new TodoListFindQuery(req.params.todoId));
@@ -63,12 +91,11 @@ function startExpressRouter() {
         data: todoList
       });
     } catch (error) {
-      logger.error(error.message)
-      res.status(500).json({
-        err: error,
-      })
+      next(error);
     }
   });
+
+  app.use(errMiddleware);
 
   app.listen(port, () => {
     return logger.info('http server started', { port: port });
