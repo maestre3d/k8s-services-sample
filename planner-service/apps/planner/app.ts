@@ -15,6 +15,7 @@ import { TodoListFinder } from '@planner/todos/application/find/todo.find';
 import { TodoListFindQuery } from '@planner/todos/application/find/todo.find.query';
 import { DomainError } from '@sharedKernel/domain/error';
 import { DomainErrors } from '@sharedKernel/domain/error/domain.errors.enum';
+import { wrapDomainErrorMiddleware, wrapErrorLog } from '@sharedKernel/infrastructure/transport/http/error.middleware';
 
 const config = ConfigurationInstance.getInstance();
 const logger = WinstonLoggerInstance.getInstance(config);
@@ -43,32 +44,6 @@ function bootstrapHttpServer() {
   startExpressRouter();
 }
 
-function errMiddleware(err: DomainError, req: Request, res: Response, next: NextFunction) {
-  logger.error(err.message, { stack: err.stack, name: err.name })
-  let code = 500;
-  switch (err.name) {
-    case DomainErrors.NotFound:
-      code = 404;
-      break;
-    case DomainErrors.AlreadyExists:
-      code = 409;
-      break;
-    case DomainErrors.OutOfRange:
-      code = 400;
-      break;
-    case DomainErrors.InvalidFormat:
-      code = 400;
-      break;
-    case DomainErrors.Custom:
-      code = 400;
-      break;
-  }
-  
-  res.status(code).json({
-    error: err,
-  })
-}
-
 function startExpressRouter() {
   const app = express();
   const port = config.httpServer.port;
@@ -95,7 +70,8 @@ function startExpressRouter() {
     }
   });
 
-  app.use(errMiddleware);
+  app.use(wrapErrorLog(logger));
+  app.use(wrapDomainErrorMiddleware);
 
   app.listen(port, () => {
     return logger.info('http server started', { port: port });
