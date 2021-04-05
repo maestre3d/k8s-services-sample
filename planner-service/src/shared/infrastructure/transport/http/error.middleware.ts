@@ -1,6 +1,6 @@
+import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { DomainError, DomainErrors } from "@sharedKernel/domain/error";
 import { Logger } from "@sharedKernel/domain/logger";
-import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 
 export function wrapDomainErrorMiddleware(err: DomainError, req: Request, res: Response, next: NextFunction) {
   let code = 500;

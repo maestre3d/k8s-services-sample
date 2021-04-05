@@ -20,7 +20,7 @@ import { OutOfRangeError } from '@sharedKernel/domain/error';
      * @param id 
      */
     private static ensureValidNanoId(field: string, id: string) {
-        if (id.length < this.minLength || id.length > this.maxLength) {
+        if ( (!id) || (id.length < this.minLength || id.length > this.maxLength)) {
             throw new OutOfRangeError(field, this.minLength.toString(), this.maxLength.toString());
         }
     }

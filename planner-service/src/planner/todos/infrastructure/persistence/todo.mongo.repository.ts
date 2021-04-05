@@ -4,7 +4,11 @@ import { TodoMongo } from './model/todo.mongo';
 import { marshalTodoMongo, unmarshalTodoMongo } from './marshal/todo.mongo';
 import { TodoId } from '@planner/shared/domain';
 
+import { injectable } from 'tsyringe';
+
+@injectable()
 export class TodoMongoRepository implements Repository<Todo> {
+    constructor() {}
 
     save(item: Todo): void {
         const todo = marshalTodoMongo(item);

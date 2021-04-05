@@ -1,17 +1,15 @@
 import { TodoId } from "@planner/shared/domain";
 import { Todo } from "@planner/todos/domain/todo";
-import { TodoRepository } from "@planner/todos/domain/todo.repository";
+import { TodoListRepository } from "@planner/todos/domain/todo.repository";
 import { NotFoundError } from "@sharedKernel/domain/error";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class TodoListFinder {
-    private _repository: TodoRepository;
-
-    constructor(repository: TodoRepository) {
-        this._repository = repository;
-    }
+    constructor(@inject('TodoListRepository') private repository: TodoListRepository) {}
 
     async invoke(id: TodoId): Promise<Todo> {
-        const todoList = await this._repository.find(id);
+        const todoList = await this.repository.find(id);
         if (todoList == null) {
             throw new NotFoundError("todo_list");
         }

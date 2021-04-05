@@ -1,13 +1,16 @@
-import winston from 'winston';
-import 'winston-daily-rotate-file';
 import { Logger } from '@sharedKernel/domain/logger';
 import { ApplicationStages } from '@sharedKernel/infrastructure/configuration/configuration.application';
 import { Configuration } from '../../configuration/configuration';
 
-class WinstonLogger implements Logger {
+import winston from 'winston';
+import 'winston-daily-rotate-file';
+import { inject, injectable } from 'tsyringe';
+
+@injectable()
+export class WinstonLogger implements Logger {
     private _logger: winston.Logger;
 
-    constructor(configuration: Configuration) {
+    constructor(@inject('Configuration') configuration: Configuration) {
         this._logger = winston.createLogger({
             level: 'info',
             format: winston.format.json(),
@@ -55,20 +58,5 @@ class WinstonLogger implements Logger {
 
     debug(message: string, ...meta: any[]): void {
         this._logger.debug(message, ...meta);
-    }
-}
-
-export class WinstonLoggerInstance {
-    private static _logger: WinstonLogger;
-
-    private constructor() { }
-
-    static getInstance(configuration: Configuration): WinstonLogger {
-        if (this._logger) {
-            return this._logger;
-        }
-
-        this._logger = new WinstonLogger(configuration);
-        return this._logger;
     }
 }

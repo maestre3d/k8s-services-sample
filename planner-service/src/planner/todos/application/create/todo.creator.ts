@@ -2,13 +2,13 @@ import { EventBus } from "@sharedKernel/domain/bus/event/event.bus";
 import { UserId } from "@planner/shared/domain";
 import { Todo } from "@planner/todos/domain/todo";
 import { TodoId } from "@planner/shared/domain";
-import { TodoRepository } from "../../domain/todo.repository";
+import { TodoListRepository } from "../../domain/todo.repository";
 
 export class TodoListCreator {
-    private _repository: TodoRepository;
+    private _repository: TodoListRepository;
     private _eventBus?: EventBus;
 
-    constructor(repository: TodoRepository, eventBus?: EventBus) {
+    constructor(repository: TodoListRepository, eventBus?: EventBus) {
         this._repository = repository;
         this._eventBus = eventBus;
     }
